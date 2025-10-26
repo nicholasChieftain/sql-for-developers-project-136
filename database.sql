@@ -89,3 +89,70 @@ create table users
     updated_at timestamp
 );
 
+create type enrollment_types as enum
+(
+    'active',
+    'pending',
+    'cancelled',
+    'completed'
+);
+
+create table enrollments 
+(
+    id bigint primary key generated always as identity,
+    user_id bigint references users (id),
+    program_id bigint references programs (id),
+    status enrollment_types,
+    created_at timestamp,
+    updated_at timestamp
+);
+
+create type payment_statuses as enum
+(
+    'pending',
+    'paid',
+    'failed',
+    'refunded'
+);
+
+create table payments 
+(
+    id bigint primary key generated always as identity,
+    enrollment_id bigint references enrollments (id),
+    price integer,
+    status payment_statuses,
+    paid_at timestamp,
+    created_at timestamp,
+    updated_at timestamp
+);
+
+create type user_program_statuses as enum 
+(
+    'active',
+    'completed',
+    'pending',
+    'cancelled'
+);
+
+create table program_completions
+(
+    id bigint primary key generated always as identity,
+    user_id bigint references users (id),
+    program_id bigint references programs (id),
+    status user_program_statuses,
+    begin_at timestamp,
+    end_at timestamp,
+    created_at timestamp,
+    updated_at timestamp
+);
+
+create table cerfitificates 
+(
+    id bigint primary key generated always as identity,
+    user_id bigint references users (id),
+    program_id bigint references programs (id),
+    url text,
+    released_in timestamp,
+    created_at timestamp,
+    updated_at timestamp
+);
